@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!--启用 spring 的注解，让 spring 在加载的时候，自动扫描 fish 包-->
+    <context:component-scan base-package="com.my.dao,com.my.beans,com.my.email,com.my.service,com.my.dao.suppor" />
+
+    <!--外部导入 properties 文件-->
+    <context:property-placeholder location="classpath:db.properties" />
+
+    <!--sessionFactory-->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <property name="dataSource">
+            <bean class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close"
+                  p:user="${user}"
+                  p:password="${password}"
+                  p:jdbcUrl="${url}"
+                  p:driverClass="${driver}" />
+        </property>
+        <property name="packagesToScan" value="com.my.beans"/>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.show_sql">${show_sql}</prop>
+                <prop key="hibernate.format_sql">${format_sql}</prop>
+                <prop key="hibernate.hbm2ddl.auto">${hbm2ddl}</prop>
+                <prop key="hibernate.dialect">${dialect}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!--配置事务管理器-->
+    <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <!--<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />-->
+
+  <!--  声明，让 spring 处理用注解形式声明的事务处理-->
+    <tx:annotation-driven proxy-target-class="true"/>
+
+
+</beans>

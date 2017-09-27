@@ -1,0 +1,43 @@
+.user_avatars {
+    overflow: auto;
+    margin-top: 10px;
+}
+.users.follow {
+    padding: 0;
+}
+.users {
+    list-style: none;
+    margin: 0;
+}
+p, ol, ul, td {
+    font-family: verdana, arial, helvetica, sans-serif;
+    font-size: 13px;
+    line-height: 18px;
+    margin: 33px;
+}
+ul, ol {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+user agent stylesheet
+ul, menu, dir {
+    display: block;
+    list-style-type: disc;
+    -webkit-margin-before: 1em;
+    -webkit-margin-after: 1em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    -webkit-padding-start: 40px;
+}
+
+.user_avatars > a >img{
+    margin-right: 0px;
+}
+.user_avatars > a{
+    padding-right: 0px;
+}
+.users li {
+    overflow: auto;
+    padding: 10px 0;
+    border-bottom: 1px solid #eeeeee;
+}

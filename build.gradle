@@ -1,0 +1,95 @@
+group 'nfwb'
+version '0.01'
+
+apply plugin: 'java'
+apply plugin: 'war'
+
+// 指定 Java 版本
+
+// 配置下载 jar 包的地址
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+// 配置需要的 jar 包依赖
+dependencies {
+
+    // 定义两个局部变量
+    // 这里代表我们需要的 hibernate 和 spring 的版本
+    def hibernateVersion = "5.1.0.Final"
+    def springVersion = "4.3.5.RELEASE"
+
+    // 在 test 中需要用到的 jar 包
+    testCompile(
+            "junit:junit:4.12"
+    )
+
+    // 指明 Tomcat 上已经自带的 jar 包，这样发布的时候才不会重复
+    providedCompile(
+            "javax:javaee-web-api:7.0",
+    )
+
+    // 配置我们项目需要用到的所有 jar 包，即 compile 环节需要的 jar 包
+    compile(
+            // https://mvnrepository.com/artifact/tomcat/jasper-compiler
+             "tomcat:jasper-compiler:5.5.23",
+
+
+            // https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload
+            "commons-fileupload:commons-fileupload:1.3.1",
+            // https://mvnrepository.com/artifact/commons-io/commons-io
+            "commons-io:commons-io:2.4",
+            // https://mvnrepository.com/artifact/javax.mail/javax.mail-api
+            'javax.mail:javax.mail-api:1.5.6',
+
+
+
+
+            /*files("C:/Users/Administrator.USER-20160622RM/Desktop/javax.mail.jar"),*/
+            // https://mvnrepository.com/artifact/cglib/cglib
+            "cglib:cglib:3.2.4",
+            //mysql
+            'mysql:mysql-connector-java:5.1.39',
+            // 本地的 OJDBC 包加入进来
+            "cn.easyproject:ojdbc7:12.1.0.2.0",
+
+            // 用来管理数据源的知名 jar 包
+            "c3p0:c3p0:0.9.1.2",
+
+            // jsp 中 jstl 标签的支持 jar 包
+            "javax.servlet:jstl:1.2",
+
+            // log4j 日志支持的 jar 包
+            "log4j:log4j:1.2.17",
+
+            // struts
+           /* "org.apache.struts:struts2-core:$strutsVersion",
+            "org.apache.struts:struts2-json-plugin:$strutsVersion",
+            "org.apache.struts:struts2-spring-plugin:$strutsVersion",*/
+            // 配置 hibernate
+            "org.hibernate:hibernate-core:$hibernateVersion",
+
+            // 配置 spring
+            "org.springframework:spring-web:$springVersion",
+            "org.springframework:spring-orm:$springVersion",
+            "org.springframework:spring-webmvc:$springVersion",
+            "com.fasterxml.jackson.core:jackson-databind:2.5.1",
+            "org.hibernate:hibernate-validator:5.4.0.Final"
+    )
+}
+
+// 为编译器配置编码，防止某些情况下编译出现乱码的情况
+// 相应的，我们所有的代码应该保存成 UTF-8 格式
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+// 自定义任务，将工程所需要的 jar 包拷贝到项目下的 lib 文件夹下
+// 需要手动执行这个 task 才会有效果。这是为了方便导出 jar 包
+task copyJars(type: Copy) {
+    // 指明我们导出的是 compile 和 test 所依赖的 jar 包
+    from configurations.compile, configurations.testCompile
+    // 指明导出到 "lib" 文件夹下
+    into "lib"
+}
